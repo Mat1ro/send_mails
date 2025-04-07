@@ -1,0 +1,159 @@
+{% extends 'base.html' %} {% block title %}Детали рассылки{% endblock %} 
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h2 class="h4 mb-0">Детали рассылки</h2>
+        </div>
+        <div class="card-body">
+          <div class="mailing-info">
+            <div class="mb-4">
+              <label class="text-muted small">Дата начала</label>
+              <p class="h5 mb-0">{{ object.start_datetime }}</p>
+            </div>
+            <div class="mb-4">
+              <label class="text-muted small">Владелец</label>
+              <p class="h5 mb-0">{{ object.owner }}</p>
+            </div>
+            <div class="mb-4">
+              <label class="text-muted small">Периодичность</label>
+              <p class="h5 mb-0">{{ object.get_periodicity_display }}</p>
+            </div>
+            <div class="mb-4">
+              <label class="text-muted small">Статус</label>
+              <span class="status-badge status-{{ object.status }}">
+                {{ object.get_status_display }}
+              </span>
+            </div>
+            <div class="mb-4">
+              <label class="text-muted small">Сообщение</label>
+              <div class="message-preview">
+                <h5 class="mb-2">{{ object.message.subject }}</h5>
+                <p class="text-muted mb-0">
+                  {{ object.message.body|truncatewords:30 }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <a
+              href="{% url 'mailing_edit' object.pk %}"
+              class="btn btn-warning flex-grow-1"
+            >
+              <i class="fas fa-edit me-2"></i>Редактировать
+            </a>
+            <a
+              href="{% url 'mailing_delete' object.pk %}"
+              class="btn btn-danger flex-grow-1"
+            >
+              <i class="fas fa-trash me-2"></i>Удалить
+            </a>
+          </div>
+          <a
+            href="{% url 'mailing_list' %}"
+            class="btn btn-outline-secondary w-100 mt-2"
+          >
+            <i class="fas fa-arrow-left me-2"></i>Назад к списку
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    border-radius: 12px 12px 0 0 !important;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .mailing-info label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .mailing-info p {
+    color: #2c3e50;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .status-created {
+    background-color: #f1f5f9;
+    color: #64748b;
+  }
+
+  .status-running {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  .status-completed {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+
+  .status-failed {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  .message-preview {
+    background-color: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .message-preview h5 {
+    color: #1e293b;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+
+    .card {
+      margin: 0;
+    }
+
+    .btn {
+      padding: 0.625rem 1.25rem;
+    }
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% block title %}Главная - Сервис рассылок 
+{% endblock %} {% block content %}
+<div class="welcome-section text-center mb-5">
+  <h1 class="display-4 mb-4">Добро пожаловать в сервис рассылок</h1>
+  <p class="lead text-muted">
+    Управляйте вашими email-рассылками эффективно и просто
+  </p>
+</div>
+
+<div class="row">
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-users fa-3x text-primary mb-3"></i>
+        <h3 class="card-title">Клиенты</h3>
+        <p class="card-text">Управляйте базой подписчиков</p>
+        <a href="{% url 'client_list' %}" class="btn btn-primary"
+          >Перейти к клиентам</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-envelope fa-3x text-primary mb-3"></i>
+        <h3 class="card-title">Сообщения</h3>
+        <p class="card-text">Создавайте шаблоны писем</p>
+        <a href="{% url 'message_list' %}" class="btn btn-primary"
+          >Перейти к сообщениям</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <div class="card-body text-center">
+        <i class="fas fa-paper-plane fa-3x text-primary mb-3"></i>
+        <h3 class="card-title">Рассылки</h3>
+        <p class="card-text">Настройте и запустите рассылки</p>
+        <a href="{% url 'mailing_list' %}" class="btn btn-primary"
+          >Перейти к рассылкам</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title mb-4">Статистика</h2>
+        <div class="row">
+          <div class="col-md-3 text-center">
+            <h4 class="text-primary">{{ total_clients }}</h4>
+            <p class="text-muted">Всего клиентов</p>
+          </div>
+          <div class="col-md-3 text-center">
+            <h4 class="text-primary">{{ total_messages }}</h4>
+            <p class="text-muted">Всего сообщений</p>
+          </div>
+          <div class="col-md-3 text-center">
+            <h4 class="text-primary">{{ total_mailings }}</h4>
+            <p class="text-muted">Всего рассылок</p>
+          </div>
+          <div class="col-md-3 text-center">
+            <h4 class="text-primary">{{ active_mailings }}</h4>
+            <p class="text-muted">Активных рассылок</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

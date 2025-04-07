@@ -1,0 +1,362 @@
+{% extends 'base.html' %} {% block title %}Список рассылок{% endblock %} 
+{% block content %}
+<div class="mailing-list">
+  <div class="page-header">
+    <h1 class="page-title">Список рассылок</h1>
+    <a href="{% url 'mailing_create' %}" class="add-button">
+      <i class="fas fa-plus"></i>
+      Добавить рассылку
+    </a>
+  </div>
+
+  <div class="mailing-table-wrapper">
+    <table class="mailing-table">
+      <thead>
+        <tr>
+          <th>Дата начала</th>
+          <th>Периодичность</th>
+          <th>Статус</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mailing in object_list %}
+                <tr>
+                  <td>{{ mailing.start_datetime }}</td>
+                  <td>{{ mailing.get_periodicity_display }}</td>
+                  <td>
+                    <span class="status-badge status-{{ mailing.status }}">
+                      {{ mailing.get_status_display }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      {% if mailing.status == 'created' %}
+                      <button class="btn btn-start" data-mailing-id="{{ mailing.pk }}">
+                        <i class="fas fa-play"></i>
+                      </button>
+                      {% endif %}
+                      <a
+                        href="{% url 'mailing_detail' mailing.pk %}"
+                        class="btn btn-view"
+                      >
+                        <i class="fas fa-eye"></i>
+                      </a>
+                      <a
+                        href="{% url 'mailing_edit' mailing.pk %}"
+                        class="btn btn-edit"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <a
+                        href="{% url 'mailing_delete' mailing.pk %}"
+                        class="btn btn-delete"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .mailing-list {
+    margin: -24px;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 0 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    position: relative;
+  }
+
+  .page-title::after {
+    content: "";
+    display: block;
+    width: 32px;
+    height: 3px;
+    background: var(--primary-color);
+    margin-top: 8px;
+    border-radius: 2px;
+  }
+
+  .add-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+  }
+
+  .add-button:hover {
+    background-color: var(--primary-hover);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+  }
+
+  .add-button:active {
+    transform: translateY(0);
+  }
+
+  .add-button i {
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+  }
+
+  .mailing-table-wrapper {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .mailing-table {
+    width: 100%;
+    background: white;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .mailing-table th {
+    background-color: #f8fafc;
+    padding: 16px 24px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 14px;
+    white-space: nowrap;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .mailing-table td {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    color: var(--text-primary);
+    transition: background-color 0.2s ease;
+  }
+
+  .mailing-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .mailing-table tbody tr {
+    transition: all 0.2s ease;
+  }
+
+  .mailing-table tbody tr:hover {
+    background-color: #f8fafc;
+    cursor: default;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .status-created {
+    background-color: #f1f5f9;
+    color: #64748b;
+  }
+
+  .status-running {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  .status-completed {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+
+  .status-failed {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn {
+    padding: 8px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+  }
+
+  .btn i {
+    font-size: 14px;
+  }
+
+  .btn-view {
+    background-color: #f1f5f9;
+    color: var(--text-secondary);
+  }
+
+  .btn-view:hover {
+    background-color: #e2e8f0;
+    color: var(--text-primary);
+  }
+
+  .btn-edit {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+
+  .btn-edit:hover {
+    background-color: #fde68a;
+    color: #92400e;
+  }
+
+  .btn-delete {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  .btn-delete:hover {
+    background-color: #fecaca;
+    color: #991b1b;
+  }
+
+  .btn-start {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  .btn-start:hover {
+    background-color: #bbf7d0;
+    color: #166534;
+  }
+
+  @media (max-width: 768px) {
+    .mailing-list {
+      margin: -16px;
+    }
+
+    .page-header {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0 16px;
+      margin-bottom: 24px;
+    }
+
+    .add-button {
+      text-align: center;
+      justify-content: center;
+      padding: 12px 20px;
+    }
+
+    .mailing-table-wrapper {
+      border-radius: 0;
+    }
+
+    .mailing-table {
+      display: block;
+      overflow-x: auto;
+    }
+
+    .mailing-table th,
+    .mailing-table td {
+      padding: 16px;
+    }
+
+    .action-buttons {
+      flex-direction: row;
+      gap: 4px;
+    }
+
+    .btn {
+      width: 28px;
+      height: 28px;
+      padding: 6px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const startButtons = document.querySelectorAll(".btn-start");
+
+    startButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        const mailingId = this.dataset.mailingId;
+        const row = this.closest("tr");
+        const statusCell = row.querySelector(".status-badge");
+
+        fetch(`/mailings/${mailingId}/start/`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              statusCell.textContent = "Запущена";
+              statusCell.className = "status-badge status-running";
+              this.remove();
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      });
+    });
+  });
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+{% endblock %}

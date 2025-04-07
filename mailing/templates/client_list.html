@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% block title %}Список клиентов{% endblock %}
+
+{% block extra_css %}
+    <style>
+        .client-list {
+            margin: -24px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 0 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            position: relative;
+        }
+
+        .page-title::after {
+            content: '';
+            display: block;
+            width: 32px;
+            height: 3px;
+            background: var(--primary-color);
+            margin-top: 8px;
+            border-radius: 2px;
+        }
+
+        .add-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .add-button:hover {
+            background-color: var(--primary-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+        }
+
+        .add-button:active {
+            transform: translateY(0);
+        }
+
+        .add-button i {
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .client-table-wrapper {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .client-table {
+            width: 100%;
+            background: white;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .client-table th {
+            background-color: #f8fafc;
+            padding: 16px 24px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 14px;
+            white-space: nowrap;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .client-table td {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            color: var(--text-primary);
+            transition: background-color 0.2s ease;
+        }
+
+        .client-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .client-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .client-table tbody tr:hover {
+            background-color: #f8fafc;
+            cursor: default;
+        }
+
+        .client-email {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .client-name {
+            font-weight: 500;
+        }
+
+        .client-comment {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn i {
+            font-size: 14px;
+        }
+
+        .btn-view {
+            background-color: #f1f5f9;
+            color: var(--text-secondary);
+        }
+
+        .btn-view:hover {
+            background-color: #e2e8f0;
+            color: var(--text-primary);
+        }
+
+        .btn-edit {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .btn-edit:hover {
+            background-color: #fde68a;
+            color: #92400e;
+        }
+
+        .btn-delete {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn-delete:hover {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
+
+        @media (max-width: 768px) {
+            .client-list {
+                margin: -16px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0 16px;
+                margin-bottom: 24px;
+            }
+
+            .add-button {
+                text-align: center;
+                justify-content: center;
+                padding: 12px 20px;
+            }
+
+            .client-table-wrapper {
+                border-radius: 0;
+            }
+
+            .client-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .client-table th,
+            .client-table td {
+                padding: 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 10px 16px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="client-list">
+        <div class="page-header">
+            <h1 class="page-title">Список клиентов</h1>
+            <a href="{% url 'client_create' %}" class="add-button">
+                <i class="fas fa-plus"></i>
+                Добавить клиента
+            </a>
+        </div>
+
+        <div class="client-table-wrapper">
+            <table class="client-table">
+                <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>ФИО</th>
+                    <th>Комментарий</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for client in object_list %}
+                    <tr>
+                        <td class="client-email">{{ client.email }}</td>
+                        <td class="client-name">{{ client.full_name }}</td>
+                        <td class="client-comment">{{ client.comment }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a
+                                        href="{% url 'client_detail' client.pk %}"
+                                        class="btn btn-view"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                    Просмотр
+                                </a>
+                                <a href="{% url 'client_edit' client.pk %}" class="btn btn-edit">
+                                    <i class="fas fa-pen"></i>
+                                    Редактировать
+                                </a>
+                                <a
+                                        href="{% url 'client_delete' client.pk %}"
+                                        class="btn btn-delete"
+                                >
+                                    <i class="fas fa-trash"></i>
+                                    Удалить
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
