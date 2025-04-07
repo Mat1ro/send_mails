@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Client, Message, Mailing
+from .models import Client, Message, Mailing, Blog
 
 
 class ClientForm(forms.ModelForm):
@@ -28,3 +28,9 @@ class MailingForm(forms.ModelForm):
     class Meta:
         model = Mailing
         fields = ['start_datetime', 'end_datetime', 'periodicity', 'message', 'clients']
+
+
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        exclude = ['created', 'views']

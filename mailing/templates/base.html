@@ -120,6 +120,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
+            {% if perms.mailing.view_client %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog_create' %}">
+                <i class="fas fa-plus-circle me-1"></i> Создать запись
+              </a>
+            </li>
+            {% endif %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'client_list' %}">
                 <i class="fas fa-users me-1"></i> Клиенты

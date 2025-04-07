@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from mailing.models import Client, Message, Mailing
+from mailing.models import Client, Message, Mailing, Blog
 
 
 @admin.register(Client)
@@ -17,3 +17,7 @@ class MessageAdmin(admin.ModelAdmin):
 class MailingAdmin(admin.ModelAdmin):
     list_display = ('id', 'message')
 
+
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title')
