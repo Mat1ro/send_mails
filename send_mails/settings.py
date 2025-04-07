@@ -46,17 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_apscheduler',
-    'guardian',
     'mailing.apps.MailingConfig',
     'users.apps.UsersConfig'
 ]
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'guardian.backends.ObjectPermissionBackend',
-)
-
-ANONYMOUS_USER_ID = -1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

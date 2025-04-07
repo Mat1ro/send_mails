@@ -1,5 +1,6 @@
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from guardian.shortcuts import assign_perm
 
 from users.models import User
 
@@ -17,9 +18,14 @@ class Client(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        assign_perm("view_client", self.owner, self)
-        assign_perm("change_client", self.owner, self)
-        assign_perm("delete_client", self.owner, self)
+
+        content_type = ContentType.objects.get_for_model(Client)
+
+        permission_view = Permission.objects.get(codename='view_client', content_type=content_type)
+        permission_change = Permission.objects.get(codename='change_client', content_type=content_type)
+        permission_delete = Permission.objects.get(codename='delete_client', content_type=content_type)
+
+        self.owner.user_permissions.add(permission_view, permission_change, permission_delete)
 
     def __str__(self):
         return self.full_name
@@ -29,6 +35,17 @@ class Message(models.Model):
     subject = models.CharField(max_length=255)
     body = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        content_type = ContentType.objects.get_for_model(Client)
+
+        permission_view = Permission.objects.get(codename='view_message', content_type=content_type)
+        permission_change = Permission.objects.get(codename='change_message', content_type=content_type)
+        permission_delete = Permission.objects.get(codename='delete_message', content_type=content_type)
+
+        self.owner.user_permissions.add(permission_view, permission_change, permission_delete)
 
     def __str__(self):
         return self.subject
@@ -53,6 +70,17 @@ class Mailing(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     clients = models.ManyToManyField(Client, related_name='mailings')
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        content_type = ContentType.objects.get_for_model(Client)
+
+        permission_view = Permission.objects.get(codename='view_mailing', content_type=content_type)
+        permission_change = Permission.objects.get(codename='change_mailing', content_type=content_type)
+        permission_delete = Permission.objects.get(codename='delete_mailing', content_type=content_type)
+
+        self.owner.user_permissions.add(permission_view, permission_change, permission_delete)
 
     def __str__(self):
         return f"Рассылка {self.id} - {self.get_status_display()}"

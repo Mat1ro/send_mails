@@ -4,7 +4,8 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from guardian.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
 
 from mailing.forms import MailingForm
 from mailing.models import Mailing
@@ -15,6 +16,8 @@ class MailingListView(LoginRequiredMixin, ListView):
     template_name = 'mailing_list.html'
 
     def get_queryset(self):
+        if self.request.user.groups.filter(name='manager').exists():
+            return Mailing.objects.all()
         return Mailing.objects.filter(owner=self.request.user)
 
 

@@ -1,7 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from guardian.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
 
 from mailing.forms import MessageForm
 from mailing.models import Message
@@ -12,6 +13,8 @@ class MessageListView(LoginRequiredMixin, ListView):
     template_name = 'message_list.html'
 
     def get_queryset(self):
+        if self.request.user.groups.filter(name='manager').exists():
+            return Message.objects.all()
         return Message.objects.filter(owner=self.request.user)
 
 
