@@ -99,3 +99,13 @@ class MailingAttempt(models.Model):
 
     def __str__(self):
         return f"Попытка рассылки {self.mailing.id} - {self.get_status_display()}"
+
+class Blog(models.Model):
+    title = models.CharField(max_length=255)
+    body = models.TextField()
+    image = models.ImageField(upload_to='blog/', **NULLABLE)
+    views = models.IntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
