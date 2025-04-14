@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4"><i class="fas fa-user-circle me-2"></i>Профиль пользователя</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ object.username }}</h5>
+                    <p class="card-text mb-2">
+                        <strong>Почта:</strong> {{ object.email }}
+                    </p>
+                    <p class="card-text mb-2">
+                        <strong>Имя:</strong> {{ object.first_name|default:"—" }}
+                    </p>
+                    <p class="card-text mb-2">
+                        <strong>Фамилия:</strong> {{ object.last_name|default:"—" }}
+                    </p>
+                    <p class="card-text mb-2">
+                        <strong>Дата регистрации:</strong> {{ object.date_joined|date:"d E Y H:i" }}
+                    </p>
+                    {% if request.user == object %}
+                        <a href="{% url 'user-update' object.pk %}" class="btn btn-outline-primary">
+                            <i class="fas fa-edit me-1"></i> Редактировать профиль
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
